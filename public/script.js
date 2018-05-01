@@ -3,6 +3,15 @@ var ShoppingCart = function () {
   // an array with all of our cart items
   var cart = [];
 
+  var STORAGE_ID  = 'shopping-cart';
+  var saveToLocalStorage = function () {
+    localStorage.setItem(STORAGE_ID, JSON.stringify(cart));
+  }
+
+  var getFromLocalStorage = function () {
+    return JSON.parse(localStorage.getItem(STORAGE_ID) || '[]');
+  }
+
   var updateCart = function () {
     // In this function we render the page.
 
@@ -11,12 +20,13 @@ var ShoppingCart = function () {
 
        // then we clear the total 
 
-       var itemsTotal = 0;
-
+      var itemsTotal = 0;
+      cart = getFromLocalStorage();
       //then we add the cart items one at a time and add them to the div
       for(i = 0; i < cart.length; i++) {
       var cartItems =  '<p> ' + cart[i].name + ' - <span> $' + cart[i].price + '</span> </p>';
       itemsTotal += cart[i].price;
+      saveToLocalStorage();
       $('.cart-list').append(cartItems);
       }
 
@@ -28,6 +38,7 @@ var ShoppingCart = function () {
     // This function has nothing to do with display. 
     // It simply is for adding an item to the cart array, no HTML involved - honest ;-)
     cart.push(item);
+    saveToLocalStorage();
    }
 
   var clearCart = function () {
@@ -37,6 +48,7 @@ var ShoppingCart = function () {
     $('.total').text(0);
     //and clears the cart array
     cart = [];
+    saveToLocalStorage();
      }
   
   return {
